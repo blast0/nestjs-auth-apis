@@ -14,7 +14,6 @@ import { Permission } from 'src/roles/dtos/role.dto';
 export class AuthorizationGuard implements CanActivate {
   constructor(private reflector: Reflector, private authService: AuthService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-
     const request = context.switchToHttp().getRequest();
 
     if (!request.userId) {
@@ -25,10 +24,9 @@ export class AuthorizationGuard implements CanActivate {
       PERMISSIONS_KEY,
       [context.getHandler(), context.getClass()],
     );
-    console.log(` the route permissions are ${routePermissions}`);
 
     if (!routePermissions) {
-        return true;
+      return true;
     }
 
     try {
