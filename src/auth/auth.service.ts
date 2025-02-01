@@ -73,21 +73,18 @@ export class AuthService {
     const { email, password } = credentials;
     //Find if user exists by email
     const user = await this.UserModel.findOne({ email });
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException('Wrong credentials');
     }
 
     //Compare entered password with existing password
     const passwordMatch = await bcrypt.compare(password, user.password);
-    console.log(passwordMatch, user.password);
     if (!passwordMatch) {
       throw new UnauthorizedException('Wrong credentials');
     }
 
     //Generate JWT tokens
     const tokens = await this.generateUserTokens(user._id);
-    console.log(tokens);
     return {
       ...tokens,
       userId: user._id,
