@@ -55,18 +55,29 @@ export class AuthService {
 
   async verify(signupData: SignupDto) {
     const { email, name } = signupData;
-    const otp = 1234;
+    const generateOTP = () => {
+      const length = 6;
+      const characters = '0123456789';
+      let otp = '';
+      for (let o = 0; o < length; o++) {
+        const getRandomIndex = Math.floor(Math.random() * characters.length);
+        otp += characters[getRandomIndex];
+      }
+      return otp;
+    };
+    const otp = generateOTP();
     const mailOptions = {
       from: 'Auth-backend-service',
       to: email,
-      subject: 'Password Reset Request',
+      subject: 'Email verification OTP',
       html: `<p>Dear ${name}. Your email verification otp is ${otp}</p>`,
     };
-    const res = await this.mailService.sendMail(mailOptions);
-    return {
-      message: res,
-      email,
-    };
+    this.mailService.sendMail(mailOptions, async (a) => {
+      return {
+        success: a,
+        email,
+      };
+    });
   }
 
   async login(credentials: LoginDto) {

@@ -19,7 +19,7 @@ export class AuthController {
 
   @Post('verify-otp')
   async verify(@Body() signupData: SignupDto) {
-    return this.authService.verify(signupData);
+    return await this.authService.verify(signupData);
   }
 
   @Post('login')

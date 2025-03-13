@@ -8,11 +8,11 @@ export class MailService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
       auth: {
-        user: 'lilla.terry55@ethereal.email',
-        pass: 'yQQSg25MR1QwugbNnN',
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
       },
     });
   }
@@ -29,8 +29,12 @@ export class MailService {
     await this.transporter.sendMail(mailOptions);
   }
 
-  async sendMail(mailoptions) {
-    const res = await this.transporter.sendMail(mailoptions);
-    return res;
+  async sendMail(mailoptions, cb) {
+    this.transporter.sendMail(mailoptions, async (error, info) => {
+      if (error) {
+        cb(error);
+      }
+      cb(true);
+    });
   }
 }
